@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nursery Alphabet Pop!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #e0f7fa;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .balloon {
+            width: 100px;
+            height: 120px;
+            background-color: #ff4081;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -150px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
+            font-weight: bold;
+            box-shadow: inset -10px -10px 0 rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+
+        .balloon:after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 45px;
+            width: 10px;
+            height: 10px;
+            background: inherit;
+            transform: rotate(45deg);
+        }
+
+        h1 {
+            color: #ef6c00;
+            font-size: 40px;
+            margin-top: 20px;
+            text-shadow: 2px 2px white;
+        }
+
+        #score-board {
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pop the Alphabet!</h1>
+    <div id="score-board">Letters Found: <span id="score">0</span></div>
+    
+    <div id="game-container"></div>
+
+    <script>
+        const container = document.getElementById('game-container');
+        const scoreElement = document.getElementById('score');
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let score = 0;
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+            
+            balloon.className = 'balloon';
+            balloon.innerText = randomLetter;
+            
+            // Randomly pick a color
+            const colors = ['#FF5252', '#448AFF', '#4CAF50', '#FFEB3B', '#E040FB', '#FF9100'];
+            balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Random horizontal position
+            balloon.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            
+            // Speed of the balloon
+            let position = -150;
+            let speed = 1 + Math.random() * 2;
+
+            container.appendChild(balloon);
+
+            // Pop effect
+            balloon.onclick = function() {
+                score++;
+                scoreElement.innerText = score;
+                balloon.style.transform = "scale(1.5)";
+                balloon.style.opacity = "0";
+                setTimeout(() => balloon.remove(), 100);
+            };
+
+            // Animation loop
+            function move() {
+                if (position > window.innerHeight) {
+                    balloon.remove();
+                } else {
+                    position += speed;
+                    balloon.style.bottom = position + 'px';
+                    requestAnimationFrame(move);
+                }
+            }
+            move();
+        }
+
+        // Create a new balloon every 1.5 seconds
+        setInterval(createBalloon, 1500);
+    </script>
+</body>
+</html>
